@@ -1,21 +1,21 @@
 #!/usr/bin/env node
 
-var fs = require("fs");
-var proxy = require("http-proxy");
-var chalk = require("chalk");
-var commandline = require("../dist/commandline");
+const fs = require('fs');
+const proxy = require('http-proxy');
+const chalk = require('chalk');
+const commandline = require('../dist/commandline');
 
-var args = commandline.parse();
+const args = commandline.parse();
 
-var config = args.config || { proxy: args };
+const config = args.config || { proxy: args };
 
 Object.keys(config).forEach(function(name) {
-  var options = config[name];
-  var hostname = options.hostname || args.hostname;
-  var target = options.target || args.target;
-  var key = options.key || args.key;
-  var cert = options.cert || args.cert;
-  var source = options.source || args.source;
+  const options = config[name];
+  const hostname = options.hostname || args.hostname;
+  const target = options.target || args.target;
+  const key = options.key || args.key;
+  const cert = options.cert || args.cert;
+  const source = options.source || args.source;
 
   proxy.createServer({
     xfwd: true,

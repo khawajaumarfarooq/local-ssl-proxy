@@ -8,7 +8,7 @@ Simple SSL HTTP proxy using a self-signed certificate. Intended for local develo
 Install
 -------
 ```sh
-npm install -g local-ssl-proxy
+npm install -g @khawajaumarfarooq/local-ssl-proxy
 ```
 
 Run

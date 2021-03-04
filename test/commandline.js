@@ -1,6 +1,5 @@
-import test from 'ava';
-import fs from 'fs';
-import commandline from '../dist/commandline';
+const test = require('ava');
+const commandline = require('../dist/commandline');
 
 test('cert (default)', t => {
   const { cert } = commandline.parse([]);
@@ -8,7 +7,7 @@ test('cert (default)', t => {
 });
 
 test('cert', t => {
-  const { cert } = commandline.parse(['--cert', '../resources/localhost.cert']);
+  const { cert } = commandline.parse(['--cert', 'resources/localhost.cert']);
   t.truthy(cert);
 });
 
@@ -18,7 +17,7 @@ test('key (default)', t => {
 });
 
 test('key', t => {
-  const { key } = commandline.parse(['--key', '../resources/localhost.key']);
+  const { key } = commandline.parse(['--key', 'resources/localhost.key']);
   t.truthy(key);
 });
 
@@ -53,6 +52,6 @@ test('target', t => {
 });
 
 test('config', t => {
-  const { config } = commandline.parse(['--config', './test-config.json']);
+  const { config } = commandline.parse(['--config', 'test/test-config.json']);
   t.truthy(config);
 });
