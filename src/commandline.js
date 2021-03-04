@@ -13,11 +13,15 @@ const options = {
   },
   source: {
     abbr: 's',
-    default: 9001
+    default: 3443
   },
   target: {
     abbr: 't',
-    default: 9000
+    default: 3080
+  },
+  'ca-cert': {
+    abbr: 'r',
+    callback: exists
   },
   cert: {
     abbr: 'c',

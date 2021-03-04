@@ -1,36 +1,50 @@
 #!/usr/bin/env node
 
 const fs = require('fs');
-const proxy = require('http-proxy');
+const https = require('https');
+const httpProxy = require('http-proxy');
 const chalk = require('chalk');
 const commandline = require('../dist/commandline');
+const latestSSLRootCAs = require('ssl-root-cas');
 
 const args = commandline.parse();
 
 const config = args.config || { proxy: args };
 
-Object.keys(config).forEach(function(name) {
+Object.keys(config).forEach((name) => {
   const options = config[name];
-  const hostname = options.hostname || args.hostname;
-  const target = options.target || args.target;
-  const key = options.key || args.key;
-  const cert = options.cert || args.cert;
-  const source = options.source || args.source;
 
-  proxy.createServer({
-    xfwd: true,
-    ws: true,
-    target: {
-      host: hostname,
-      port: target
-    },
-    ssl: {
-      key: fs.readFileSync(key, "utf8"),
-      cert: fs.readFileSync(cert, "utf8")
-    }
-  }).on("error", function(e) {
-    console.error(chalk.red("Request failed to " + name + ": " + chalk.bold(e.code)));
-  }).listen(source);
+  const hostname = options['hostname'] || args.hostname;
+  const caCert = options['ca-cert'] || args['ca-cert'];
+  const cert = options['cert'] || args['cert'];
+  const key = options['key'] || args['key'];
+  const source = options['source'] || args['source'];
+  const target = options['target'] || args['target'];
 
-  console.log(chalk.green("Started " + chalk.bold(name) + ": https://" + hostname + ":" + source, "→ http://" + hostname + ":" + target));
+  if (caCert) {
+    https.globalAgent.options.ca = latestSSLRootCAs
+      .create()
+      .addFile(caCert);
+  }
+
+  httpProxy
+    .createServer({
+      xfwd: true,
+      ws: true,
+      target: {
+        host: hostname,
+        port: target
+      },
+      ssl: {
+        ca: fs.readFileSync(caCert, 'utf8'),
+        cert: fs.readFileSync(cert, 'utf8'),
+        key: fs.readFileSync(key, 'utf8')
+      }
+    })
+    .on('error', (error) => {
+      console.error(chalk.red('Request failed to ' + name + ': ' + chalk.bold(error.code)));
+    })
+    .listen(source);
+
+  console.log(chalk.green('Started ' + chalk.bold(name) + ': https://' + hostname + ':' + source, '→ http://' + hostname + ':' + target));
 });

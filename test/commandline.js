@@ -33,7 +33,7 @@ test('hostname', t => {
 
 test('source (default)', t => {
   const { source } = commandline.parse([]);
-  t.is(source, 9001);
+  t.is(source, 3443);
 });
 
 test('source', t => {
@@ -43,7 +43,7 @@ test('source', t => {
 
 test('target (default)', t => {
   const { target } = commandline.parse([]);
-  t.is(target, 9000);
+  t.is(target, 3080);
 });
 
 test('target', t => {
